@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import dill
 from sklearn.metrics import r2_score
+from sklearn.model_selection import GridSearchCV
 
 def save_object(file_path: str, obj: object) -> None:
     """
@@ -26,7 +27,7 @@ def save_object(file_path: str, obj: object) -> None:
     except Exception as e:
         raise Exception(f"Error occurred while saving object: {e}")
     
-def evaluate_models(X, y, X_test, y_test, models):
+def evaluate_models(X, y, X_test, y_test, models,params):
     """
     Evaluate multiple machine learning models and return their performance scores.
 
@@ -36,17 +37,26 @@ def evaluate_models(X, y, X_test, y_test, models):
         X_test (array-like): Testing features.
         y_test (array-like): Testing labels.
         models (dict): A dictionary of model names and their corresponding model instances.
+        params (dict): A dictionary of hyperparameters for each model.
 
     Returns:
         dict: A dictionary containing model names as keys and their performance scores as values.
     """
     try:
         model_report = {}
-        for model_name, model in models.items():
-            model.fit(X, y)
+        for i in range(len(models)):
+            model = list(models.values())[i]
+            para=params[list(models.keys())[i]]
+
+            gs = GridSearchCV(model,para,cv=3)
+            gs.fit(X,y)
+
+            model.set_params(**gs.best_params_)
+            model.fit(X,y)
+
             y_test_pred = model.predict(X_test)
             test_model_score = r2_score(y_test, y_test_pred)
-            model_report[model_name] = test_model_score
+            model_report[list(models.keys())[i]] = test_model_score
 
         return model_report
 
