@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduPredict – Student Performance</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        /* ----- Reset & Variables (Light Theme) ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-body: #f5f9ff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f0f5ff;
+            --border-light: #e4ecf7;
+            --text-primary: #1a2235;
+            --text-secondary: #4a5670;
+            --text-muted: #7a88a6;
+            --accent-1: #5b6bfc;
+            --accent-2: #8b5cf6;
+            --accent-gradient: linear-gradient(135deg, #5b6bfc, #8b5cf6);
+            --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 60px rgba(91, 107, 252, 0.12);
+            --radius: 24px;
+            --radius-sm: 14px;
+            --font: 'Inter', sans-serif;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            margin: 0;
+            position: relative;
+        }
+
+        /* ----- Subtle Animated Background ----- */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bg-shapes .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.10;
+            animation: floatShape 30s ease-in-out infinite alternate;
+        }
+
+        .bg-shapes .shape:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            right: -100px;
+            background: #5b6bfc;
+            animation-duration: 35s;
+        }
+
+        .bg-shapes .shape:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            bottom: -80px;
+            left: -80px;
+            background: #8b5cf6;
+            animation-duration: 28s;
+            animation-delay: -5s;
+        }
+
+        .bg-shapes .shape:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 50%;
+            background: #3b82f6;
+            animation-duration: 25s;
+            animation-delay: -10s;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes floatShape {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            33% {
+                transform: translate(40px, -30px) scale(1.1) rotate(5deg);
+            }
+            66% {
+                transform: translate(-20px, 40px) scale(0.95) rotate(-3deg);
+            }
+            100% {
+                transform: translate(20px, -20px) scale(1.05) rotate(2deg);
+            }
+        }
+
+        /* ----- Main Card ----- */
+        .login {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 720px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 44px 40px 36px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            transition: var(--transition);
+            animation: cardEntry 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes cardEntry {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ----- Header ----- */
+        .login .main-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .login .sub-title {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .login .sub-title .acc-badge {
+            background: rgba(91, 107, 252, 0.12);
+            border: 1px solid rgba(91, 107, 252, 0.18);
+            padding: 4px 18px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-1);
+            -webkit-text-fill-color: var(--accent-1);
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .login .sub-title .acc-badge i {
+            font-size: 0.8rem;
+        }
+
+        /* ----- Form Fields ----- */
+        .mb-3 {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .form-label i {
+            color: var(--accent-1);
+            width: 20px;
+            font-size: 0.9rem;
+        }
+
+        .form-control,
+        select.form-control {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-body);
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            outline: none;
+            transition: var(--transition);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-control:focus,
+        select.form-control:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 4px rgba(91, 107, 252, 0.12);
+            background: #ffffff;
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
+        select.form-control {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a88a6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 44px;
+        }
+
+        select.form-control option {
+            background: #ffffff;
+            color: var(--text-primary);
+        }
+
+        /* Hide number arrows */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        /* ----- Submit Button ----- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 100px;
+            font-family: var(--font);
+            font-weight: 600;
+            font-size: 1.05rem;
+            background: var(--accent-gradient);
+            color: #fff;
+            box-shadow: 0 8px 28px rgba(91, 107, 252, 0.3);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 48px rgba(91, 107, 252, 0.4);
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn i {
+            font-size: 1.1rem;
+        }
+
+        /* ----- Result Card ----- */
+        .result-box {
+            margin-top: 32px;
+            padding: 24px 28px;
+            background: var(--bg-body);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            transition: var(--transition);
+            display: {% if results is defined and results is not none %}block{% else %}none{% endif %};
+            animation: resultSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .result-box.visible {
+            display: block;
+        }
+
+        @keyframes resultSlideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-box .result-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .result-box .result-value {
+            font-size: 3.4rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            margin: 4px 0 2px;
+        }
+
+        .result-box .result-sub {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .result-box .result-icon {
+            font-size: 2.4rem;
+            margin-bottom: 6px;
+            display: block;
+            -webkit-text-fill-color: initial;
+            color: var(--accent-1);
+        }
+
+        /* ----- Footer Accuracy ----- */
+        .accuracy-footer {
+            margin-top: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-light);
+            padding-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .accuracy-footer .highlight {
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1rem;
+        }
+
+        .accuracy-footer i {
+            color: var(--accent-1);
+        }
+
+        /* ----- Responsive ----- */
+        @media (max-width: 640px) {
+            .login {
+                padding: 28px 20px;
+            }
+            .login .main-title {
+                font-size: 1.6rem;
+            }
+            .result-box .result-value {
+                font-size: 2.6rem;
+            }
+            .btn {
+                font-size: 0.95rem;
+                padding: 14px 20px;
+            }
+            .form-control {
+                font-size: 0.9rem;
+                padding: 10px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Background Shapes -->
+    <div class="bg-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Main Card -->
+    <div class="login">
+
+        <!-- Header -->
+        <div class="main-title">
+            <i class="fas fa-graduation-cap" style="margin-right:12px; -webkit-text-fill-color: var(--accent-1);"></i>
+            Student Performance
+        </div>
+        <div class="sub-title">
+            <span>Predict Maths Score with AI</span>
+            <span class="acc-badge"><i class="fas fa-robot"></i> 90% accuracy</span>
+        </div>
+
+        <!-- Form -->
+        <form action="{{ url_for('predict_datapoint') }}" method="post">
+
+            <!-- Gender -->
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-venus-mars"></i> Gender</label>
+                <select class="form-control" name="gender" required>
+                    <option class="placeholder" selected disabled value="">Select your Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+
+            <!-- Ethnicity -->
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-users"></i> Race / Ethnicity</label>
+                <select class="form-control" name="ethnicity" required>
+                    <option class="placeholder" selected disabled value="">Select Ethnicity</option>
+                    <option value="group A">Group A</option>
+                    <option value="group B">Group B</option>
+                    <option value="group C">Group C</option>
+                    <option value="group D">Group D</option>
+                    <option value="group E">Group E</option>
+                </select>
+            </div>
+
+            <!-- Parental Education -->
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-user-graduate"></i> Parental Level of Education</label>
+                <select class="form-control" name="parental_level_of_education" required>
+                    <option class="placeholder" selected disabled value="">Select Parent Education</option>
+                    <option value="associate's degree">Associate's Degree</option>
+                    <option value="bachelor's degree">Bachelor's Degree</option>
+                    <option value="high school">High School</option>
+                    <option value="master's degree">Master's Degree</option>
+                    <option value="some college">Some College</option>
+                    <option value="some high school">Some High School</option>
+                </select>
+            </div>
+
+            <!-- Lunch -->
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-utensils"></i> Lunch Type</label>
+                <select class="form-control" name="lunch" required>
+                    <option class="placeholder" selected disabled value="">Select Lunch Type</option>
+                    <option value="free/reduced">Free / Reduced</option>
+                    <option value="standard">Standard</option>
+                </select>
+            </div>
+
+            <!-- Test Prep -->
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-book-open"></i> Test Preparation Course</label>
+                <select class="form-control" name="test_preparation_course" required>
+                    <option class="placeholder" selected disabled value="">Select Test Course</option>
+                    <option value="none">None</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+
+            <!-- Reading Score -->
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-book-reader"></i> Reading Score (0–100)</label>
+                <input class="form-control" type="number" name="reading_score"
+                       placeholder="Enter your Reading score" min="0" max="100" required />
+            </div>
+
+            <!-- Writing Score -->
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-pencil-alt"></i> Writing Score (0–100)</label>
+                <input class="form-control" type="number" name="writing_score"
+                       placeholder="Enter your Writing score" min="0" max="100" required />
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn">
+                <i class="fas fa-calculator"></i> Predict Maths Score
+            </button>
+
+        </form>
+
+        <!-- Result Display -->
+        <div class="result-box {% if results is defined and results is not none %}visible{% endif %}">
+            <span class="result-icon">📊</span>
+            <div class="result-label">Predicted Maths Score</div>
+            <div class="result-value">
+                {% if results is defined and results is not none %}
+                    {{ results|round(1) if results is number else results }}
+                {% else %}
+                    —
+                {% endif %}
+            </div>
+            <div class="result-sub">Based on the provided student data</div>
+        </div>
+
+        <!-- Footer Accuracy -->
+        <div class="accuracy-footer">
+            <i class="fas fa-shield-alt"></i>
+            Model accuracy <span class="highlight">90%</span>
+            <i class="fas fa-robot" style="margin-left:6px;"></i>
+            <span style="margin-left:4px;">XGBoost</span>
+        </div>
+
+    </div>
+
+</body>
+</html>
