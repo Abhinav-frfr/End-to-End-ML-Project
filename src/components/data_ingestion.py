@@ -4,6 +4,8 @@ from src.exceptions import CustomException
 from src.logger import logging
 import pandas as pd
 
+from src.components.data_transformation import DataTransformation
+from src.components.data_transformation import DataTransformationConfig
 
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
@@ -22,6 +24,13 @@ class DataIngestion:
         logging.info("Entered the data ingestion method or component")
         try:
             df = pd.read_csv('notebook/data/stud.csv')
+
+            df['gender']=df['gender'].astype('object')
+            df['race/ethnicity']=df['race/ethnicity'].astype('object')
+            df['parental level of education']=df['parental level of education'].astype('object')
+            df['lunch']=df['lunch'].astype('object')
+            df['test preparation course']=df['test preparation course'].astype('object')
+            
             logging.info('Read the dataset as dataframe')
 
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path), exist_ok=True)
@@ -46,4 +55,6 @@ class DataIngestion:
 
 if __name__ == "__main__":
     obj = DataIngestion()
-    obj.initiate_data_ingestion()
+    train_data, test_data = obj.initiate_data_ingestion()
+    transformer = DataTransformation()
+    train_arr, test_arr, preprocessor_obj_file_path = transformer.initiate_data_transformation(train_data, test_data)
